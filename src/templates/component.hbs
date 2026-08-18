@@ -1,0 +1,56 @@
+# {{name}}
+
+{{#if description}}
+{{description}}
+{{else if comment}}
+{{comment}}
+{{/if}}
+
+{{#if props}}
+## Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+{{#each props}}
+| {{@key}} | `{{value}}` | {{#if properties.[this].optional}}No{{else}}Yes{{/if}} | {{#if description}}{{description}}{{else}}-{{/if}} |
+{{/each}}
+{{/if}}
+
+{{#if examples}}
+{{#hasItems examples}}
+## Usage
+
+{{#each examples}}
+{{#if title}}
+### {{title}}
+{{/if}}
+
+{{#if description}}
+{{description}}
+{{/if}}
+
+{{{codeBlock language code}}}
+
+{{/each}}
+{{/hasItems}}
+{{else}}
+## Usage
+
+```tsx
+import { {{name}} } from './{{name}}';
+
+<{{name}} />
+```
+{{/if}}
+
+{{#if notes}}
+## Notes
+
+{{#each notes}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+## Source
+
+{{{link filePath (concat filePath "#L" line)}}}

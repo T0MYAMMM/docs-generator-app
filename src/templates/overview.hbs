@@ -1,0 +1,35 @@
+# {{projectName}}
+
+{{description}}
+
+## Project Statistics
+
+- **Files**: {{fileCount}}
+- **Symbols**: {{symbolCount}}
+- **Type**: {{capitalize projectType}}
+
+## Dependencies
+
+{{#each dependencies}}
+- {{@key}}: {{this}}
+{{/each}}
+
+## Documentation
+
+- [API Reference](./api/index.md)
+- [Components](./components/index.md)
+- [Types](./types/index.md)
+
+{{#if architecture}}
+## Architecture
+
+{{architecture}}
+{{/if}}
+
+{{#if patterns}}
+## Detected Patterns
+
+{{#each patterns}}
+- **{{name}}** ({{type}}): {{filePath}}
+{{/each}}
+{{/if}}

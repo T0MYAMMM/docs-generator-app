@@ -1,0 +1,46 @@
+# {{name}}
+
+{{#if description}}
+{{description}}
+{{else if comment}}
+{{comment}}
+{{/if}}
+
+## Definition
+
+```typescript
+{{#if source}}
+{{source}}
+{{else}}
+{{type}} {{name}}
+{{/if}}
+```
+
+{{#if props}}
+## Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+{{#each props}}
+| {{@key}} | `{{value}}` | {{#if properties.[this].optional}}No{{else}}Yes{{/if}} | {{#if description}}{{description}}{{else}}-{{/if}} |
+{{/each}}
+{{/if}}
+
+{{#if examples}}
+{{#hasItems examples}}
+## Examples
+
+{{#each examples}}
+{{#if title}}
+### {{title}}
+{{/if}}
+
+{{{codeBlock language code}}}
+
+{{/each}}
+{{/hasItems}}
+{{/if}}
+
+## Source
+
+{{{link filePath (concat filePath "#L" line)}}}

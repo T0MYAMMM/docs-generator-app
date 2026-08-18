@@ -1,0 +1,148 @@
+# DocGen Configuration Example
+# Copy this file to your project root as 'docgen.config.yml'
+
+# Project settings
+project:
+  # Project root path (default: current directory)
+  path: ./
+
+  # Project name (auto-detected from package.json if not set)
+  name: My Project
+
+  # Project type: nextjs, react, typescript, javascript
+  # (auto-detected if not set)
+  type: nextjs
+
+# Output configuration
+output:
+  # Where to generate documentation
+  path: ./docs
+
+  # How to organize files: mirror, flat, custom
+  # - mirror: mirrors source code structure
+  # - flat: all docs in one directory
+  # - custom: use custom organization
+  structure: mirror
+
+  # Clean output directory before generation
+  clean: false
+
+# File selection
+files:
+  # Glob patterns for files to include
+  include:
+    - "src/**/*.{ts,tsx,js,jsx}"
+    - "app/**/*.{ts,tsx,js,jsx}"
+    - "pages/**/*.{ts,tsx,js,jsx}"
+    - "components/**/*.{ts,tsx,js,jsx}"
+    - "lib/**/*.{ts,js}"
+
+  # Glob patterns to exclude
+  exclude:
+    - "**/*.test.{ts,tsx,js,jsx}"
+    - "**/*.spec.{ts,tsx,js,jsx}"
+    - "**/*.stories.{ts,tsx,js,jsx}"
+    - "**/node_modules/**"
+    - "**/.next/**"
+    - "**/dist/**"
+    - "**/build/**"
+
+# LLM configuration
+llm:
+  # LLM provider (currently only 'ollama' supported)
+  provider: ollama
+
+  # Ollama model to use
+  # Options: codellama:latest, deepseek-coder:6.7b, qwen2.5-coder:7b
+  model: codellama:latest
+
+  # Ollama API base URL
+  baseURL: http://localhost:11434
+
+  # Temperature (0.0 = deterministic, 1.0 = creative)
+  temperature: 0.3
+
+  # Max tokens per response
+  maxTokens: 2048
+
+# Documentation types to generate
+generate:
+  # Project overview and architecture
+  overview: true
+
+  # API reference (functions, classes, types)
+  api: true
+
+  # Component documentation (React components)
+  components: true
+
+  # Setup and installation guide
+  setup: true
+
+  # Architecture documentation
+  architecture: true
+
+  # User guides (manual, not auto-generated)
+  guides: false
+
+# Custom templates (optional)
+templates:
+  # Override default templates with custom ones
+  # api: ./templates/custom-api.hbs
+  # component: ./templates/custom-component.hbs
+  # overview: ./templates/custom-overview.hbs
+
+# Frontmatter defaults
+frontmatter:
+  # Default author for all generated docs
+  author: DocGen
+
+  # Tags to add to all generated docs
+  defaultTags:
+    - auto-generated
+    - documentation
+
+  # Additional frontmatter fields
+  # customField: value
+
+# Performance settings
+performance:
+  # Number of parallel LLM calls (adjust based on CPU cores)
+  parallel: 4
+
+  # Enable caching (recommended)
+  cache: true
+
+  # Cache directory
+  cacheDir: ./.docgen-cache
+
+# Behavior
+behavior:
+  # Skip files that already have documentation
+  skipExisting: false
+
+  # Update mode: smart, force, never
+  # - smart: update if source changed
+  # - force: always regenerate
+  # - never: never update existing
+  updateMode: smart
+
+  # Dry run (preview without writing files)
+  dryRun: false
+
+  # Verbose logging
+  verbose: false
+
+# Advanced options
+advanced:
+  # Include private/internal symbols
+  includePrivate: false
+
+  # Minimum comment length to consider documented
+  minCommentLength: 10
+
+  # Generate examples for functions
+  generateExamples: true
+
+  # Cross-reference related docs
+  crossReference: true

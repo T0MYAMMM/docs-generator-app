@@ -1,0 +1,133 @@
+# {{project.name}}
+
+{{#if project.description}}
+{{project.description}}
+{{else}}
+This is an Apache Airflow project containing DAGs (workflows) for data orchestration and pipeline management.
+{{/if}}
+
+## 🎯 What is This Project?
+
+This project uses **Apache Airflow** to automate and orchestrate data workflows. Airflow helps schedule and monitor complex data pipelines.
+
+### Quick Start Guide
+
+1. **What are DAGs?** - DAGs (Directed Acyclic Graphs) are workflows that define what tasks to run and in what order
+2. **What are Operators?** - Operators are the building blocks that perform individual tasks (like running Python code, SQL queries, or bash commands)
+3. **What are Sensors?** - Sensors wait for certain conditions to be met before proceeding (like waiting for a file to exist)
+
+## 📊 Project Statistics
+
+- **Total Files**: {{project.fileCount}}
+- **DAGs Found**: {{dagCount}}
+- **Custom Operators**: {{customOperatorCount}}
+- **Custom Sensors**: {{customSensorCount}}
+- **Total Symbols**: {{project.symbolCount}}
+
+## 🔄 Main Workflows (DAGs)
+
+{{#if dags}}
+{{#each dags}}
+### {{this.name}}
+{{#if this.description}}
+{{this.description}}
+{{else}}
+Workflow: {{this.name}}
+{{/if}}
+
+- **Schedule**: {{#if this.metadata.scheduleInterval}}{{this.metadata.scheduleInterval}}{{else}}Manual trigger{{/if}}
+- **File**: [`{{this.filePath}}`]({{this.filePath}})
+{{#if this.metadata.tags}}
+- **Tags**: {{#each this.metadata.tags}}{{this}}, {{/each}}
+{{/if}}
+
+{{/each}}
+{{else}}
+No DAG patterns were detected. DAGs may be defined in the Python files.
+{{/if}}
+
+## 🛠️ Custom Components
+
+{{#if customOperators}}
+### Custom Operators
+These are special task types built for this project:
+
+{{#each customOperators}}
+- **{{this.name}}** - {{#if this.description}}{{this.description}}{{else}}Custom operator{{/if}}
+  - File: [`{{this.filePath}}`]({{this.filePath}})
+{{/each}}
+{{/if}}
+
+{{#if customSensors}}
+### Custom Sensors
+These wait for specific conditions:
+
+{{#each customSensors}}
+- **{{this.name}}** - {{#if this.description}}{{this.description}}{{else}}Custom sensor{{/if}}
+  - File: [`{{this.filePath}}`]({{this.filePath}})
+{{/each}}
+{{/if}}
+
+## 📖 Glossary - Understanding Airflow
+
+**New to Airflow?** Here are the key terms explained simply:
+
+### DAG (Directed Acyclic Graph)
+A workflow or pipeline that defines a series of tasks and their dependencies. Think of it as a recipe that tells Airflow what tasks to run and in what order.
+- **Example**: "First download data, then clean it, then upload to database"
+
+### Operator
+A single task or action in your workflow. Each operator does one specific job.
+- **Example**: `PythonOperator` runs Python code, `BashOperator` runs shell commands
+
+### Sensor
+A special type of operator that waits for something to happen before continuing.
+- **Example**: `FileSensor` waits until a specific file exists before proceeding
+
+### Task
+A specific instance of an operator in your DAG. When you create an operator and give it a `task_id`, it becomes a task.
+- **Example**: `download_data = PythonOperator(task_id="download_data", ...)`
+
+### Schedule
+When and how often your DAG should run automatically. Uses cron expressions or presets like `@daily`, `@hourly`.
+- **Example**: `@daily` means run once every day at midnight
+
+### Task Dependency
+The order that tasks must run in. You specify which tasks must finish before others can start.
+- **Example**: `task_a >> task_b` means "run task_a first, then task_b"
+
+## 📚 Documentation Sections
+
+- [Architecture Overview](./architecture.md) - See all DAGs and operators
+- [Functions](./functions/) - Python functions used in tasks
+- [Classes](./classes/) - Custom operators, sensors, and utilities
+- [Constants & Variables](./misc/) - Configuration values
+
+## 🚀 Getting Started
+
+To work with these DAGs:
+
+1. **Review the DAGs** - Check the workflow definitions above
+2. **Understand the tasks** - Each DAG contains multiple tasks (operators)
+3. **Check dependencies** - Tasks run in a specific order
+4. **Monitor executions** - View in Airflow UI when DAGs run
+
+## 📝 Common Airflow Commands
+
+```bash
+# List all DAGs
+airflow dags list
+
+# Test a specific DAG
+airflow dags test <dag_id> <execution_date>
+
+# Trigger a DAG manually
+airflow dags trigger <dag_id>
+
+# View DAG status
+airflow dags state <dag_id> <execution_date>
+```
+
+---
+
+*Generated with DocGen - Making code documentation accessible to everyone*

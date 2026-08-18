@@ -1,0 +1,98 @@
+# {{name}}
+
+{{#if comment}}
+{{comment}}
+{{else if description}}
+{{description}}
+{{else}}
+Python function that performs {{name}} operation.
+{{/if}}
+
+## 📝 Function Signature
+
+```python
+def {{name}}({{formatPythonParams parameters}}){{#if returnType}} -> {{returnType.type}}{{/if}}
+```
+
+{{#if parameters.length}}
+## 📥 Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+{{#each parameters}}
+| `{{name}}` | {{#if type}}`{{type}}`{{else}}`Any`{{/if}} | {{#if optional}}No{{else}}Yes{{/if}} | {{#if defaultValue}}`{{defaultValue}}`{{else}}-{{/if}} | {{#if description}}{{description}}{{else}}-{{/if}} |
+{{/each}}
+
+{{#if hasVarArgs}}
+**Note**: This function accepts variable arguments (`*args` or `**kwargs`)
+{{/if}}
+{{/if}}
+
+{{#if returnType}}
+## 📤 Returns
+
+**Type**: `{{returnType.type}}`
+
+{{#if returnType.description}}
+{{returnType.description}}
+{{else}}
+Returns a value of type `{{returnType.type}}`
+{{/if}}
+{{/if}}
+
+{{#if tags.async}}
+## ⚡ Async Function
+
+This is an asynchronous function. Use `await` when calling it.
+
+```python
+result = await {{name}}(...)
+```
+{{/if}}
+
+{{#if tags.decorators}}
+## 🎨 Decorators
+
+This function uses the following decorators:
+```python
+{{tags.decorators}}
+```
+{{/if}}
+
+{{#if examples.length}}
+## 💡 Usage Examples
+
+{{#each examples}}
+{{#if title}}
+### {{title}}
+{{/if}}
+
+{{#if description}}
+{{description}}
+{{/if}}
+
+```python
+{{{code}}}
+```
+
+{{/each}}
+{{/if}}
+
+{{#if tags}}
+## 🏷️ Additional Information
+
+{{#each tags}}
+{{#unless (or (eq @key "async") (eq @key "decorators") (eq @key "docstring_style"))}}
+- **{{@key}}**: {{this}}
+{{/unless}}
+{{/each}}
+{{/if}}
+
+## 📍 Source Location
+
+File: [`{{filePath}}`]({{filePath}}{{#if line}}#L{{line}}{{/if}})
+{{#if line}}Line: {{line}}{{/if}}
+
+---
+
+*💡 Tip: Click the file path above to view the complete source code*

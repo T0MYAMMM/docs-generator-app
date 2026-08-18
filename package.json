@@ -1,0 +1,55 @@
+{
+  "name": "docgen",
+  "version": "0.1.0",
+  "description": "Automatic documentation generator using static analysis and local LLM",
+  "main": "dist/index.js",
+  "bin": {
+    "docgen": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "documentation",
+    "generator",
+    "typescript",
+    "llm",
+    "ollama",
+    "markdown",
+    "code-analysis"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "ora": "^8.0.1",
+    "chalk": "^5.3.0",
+    "enquirer": "^2.4.1",
+    "glob": "^10.3.10",
+    "gray-matter": "^4.0.3",
+    "handlebars": "^4.7.8",
+    "ollama": "^0.5.0",
+    "yaml": "^2.3.4",
+    "ignore": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.1",
+    "@vitest/coverage-v8": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

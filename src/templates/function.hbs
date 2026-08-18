@@ -1,0 +1,66 @@
+# {{name}}
+
+{{#if description}}
+{{description}}
+{{else if comment}}
+{{comment}}
+{{/if}}
+
+## Signature
+
+```typescript
+{{#if signature}}
+{{signature}}
+{{else}}
+function {{name}}({{formatParams parameters}}){{#if returnType}}: {{returnType.type}}{{/if}}
+{{/if}}
+```
+
+{{#if parameters}}
+{{#hasItems parameters}}
+## Parameters
+
+{{#each parameters}}
+- **{{name}}**{{#if type}}: `{{type}}`{{/if}}{{#if optional}} *(optional)*{{/if}}{{#if defaultValue}} = `{{defaultValue}}`{{/if}}{{#if description}} - {{description}}{{/if}}
+{{/each}}
+{{/hasItems}}
+{{/if}}
+
+{{#if returnType}}
+## Returns
+
+**{{returnType.type}}**{{#if returnType.description}} - {{returnType.description}}{{/if}}
+{{/if}}
+
+{{#if examples}}
+{{#hasItems examples}}
+## Examples
+
+{{#each examples}}
+{{#if title}}
+### {{title}}
+{{/if}}
+
+{{#if description}}
+{{description}}
+{{/if}}
+
+{{{codeBlock language code}}}
+
+{{/each}}
+{{/hasItems}}
+{{/if}}
+
+{{#if tags}}
+## Tags
+
+{{#each tags}}
+{{#if @key}}
+- **{{@key}}**: {{this}}
+{{/if}}
+{{/each}}
+{{/if}}
+
+## Source
+
+{{{link filePath (concat filePath "#L" line)}}}

@@ -1,0 +1,135 @@
+# {{name}}
+
+{{#if comment}}
+{{comment}}
+{{else if description}}
+{{description}}
+{{else}}
+Python class for {{name}}.
+{{/if}}
+
+{{#if extends}}
+## 📦 Class Hierarchy
+
+**Extends**: `{{extends}}`
+{{#if implements}}
+**Also Implements**: {{#each implements}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
+{{/if}}
+
+{{#if (eq extends "BaseOperator")}}
+### About Operators
+This is an **Airflow Operator** - a task that performs a specific action in your workflow. Operators are the building blocks of DAGs.
+{{/if}}
+
+{{#if (eq extends "BaseSensorOperator")}}
+### About Sensors
+This is an **Airflow Sensor** - a special operator that waits for a condition to be met before allowing the workflow to continue.
+{{/if}}
+{{/if}}
+
+{{#if tags.decorators}}
+## 🎨 Decorators
+
+This class uses decorators:
+```python
+{{tags.decorators}}
+```
+{{/if}}
+
+{{#if parameters.length}}
+## 🔧 Constructor Parameters
+
+When creating an instance of this class, you can provide:
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+{{#each parameters}}
+| `{{name}}` | {{#if type}}`{{type}}`{{else}}`Any`{{/if}} | {{#if optional}}No{{else}}Yes{{/if}} | {{#if defaultValue}}`{{defaultValue}}`{{else}}-{{/if}} | {{#if description}}{{description}}{{else}}-{{/if}} |
+{{/each}}
+{{/if}}
+
+{{#if tags.methods}}
+## 📚 Methods
+
+This class has **{{tags.methods}}** method{{#unless (eq tags.methods "1")}}s{{/unless}}.
+
+{{#if (gt tags.methods "0")}}
+Key methods include:
+- View the complete list of methods in the [Methods](#methods) section below
+- Each method is documented with its parameters and return values
+{{/if}}
+{{/if}}
+
+{{#if tags.properties}}
+## 🔑 Properties
+
+This class has **{{tags.properties}}** propert{{#if (eq tags.properties "1")}}y{{else}}ies{{/if}}.
+
+Properties are attributes that can be accessed like variables but may have custom logic.
+{{/if}}
+
+{{#if examples.length}}
+## 💡 Usage Example
+
+{{#each examples}}
+{{#if description}}
+{{description}}
+{{/if}}
+
+```python
+{{{code}}}
+```
+
+{{/each}}
+{{else}}
+## 💡 Basic Usage
+
+```python
+# Create an instance
+instance = {{name}}(
+    # Add required parameters here
+)
+
+# Use the instance
+{{#if extends}}
+# This class extends {{extends}}
+{{/if}}
+```
+{{/if}}
+
+{{#if tags}}
+## 🏷️ Additional Information
+
+{{#each tags}}
+{{#unless (or (eq @key "decorators") (eq @key "methods") (eq @key "properties") (eq @key "bases") (eq @key "docstring_style"))}}
+- **{{@key}}**: {{this}}
+{{/unless}}
+{{/each}}
+{{/if}}
+
+{{#if (or (includes filePath "operator") (includes filePath "Operator"))}}
+## 🔄 Airflow Integration
+
+This operator can be used in Airflow DAGs like this:
+
+```python
+from airflow import DAG
+from datetime import datetime
+
+# In your DAG definition:
+task = {{name}}(
+    task_id='my_task',
+    # Add your parameters here
+    dag=dag
+)
+```
+{{/if}}
+
+## 📍 Source Location
+
+File: [`{{filePath}}`]({{filePath}}{{#if line}}#L{{line}}{{/if}})
+{{#if line}}Line: {{line}}{{/if}}
+
+---
+
+*💡 Tip: For detailed method documentation, look for individual method files in the documentation*
