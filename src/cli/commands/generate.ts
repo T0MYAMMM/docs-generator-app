@@ -9,10 +9,9 @@ import chalk from 'chalk';
 import { Scanner } from '../../core/scanner/index.js';
 import { Analyzer } from '../../core/analyzer/index.js';
 import { Generator } from '../../core/generator/index.js';
-import { LLMService } from '../../llm/llm-service.js';
+import { createDocEnhancer } from '../../llm/doc-enhancer.js';
 import { loadConfig, validateConfig } from '../../core/config/config-loader.js';
 import { logger } from '../../utils/logger.js';
-import { AIGeneratedContent } from '../../types/index.js';
 
 interface GenerateOptions {
   tests?: boolean;
@@ -126,21 +125,27 @@ export async function generateCommand(
     logger.info('Symbol breakdown:', symbolCounts);
 
     // Phase 3: LLM Enhancement (optional)
-    let aiContent: Map<string, AIGeneratedContent> | undefined;
+    // DocEnhancer rewrites symbol descriptions in place, so the enhanced
+    // analysis is what gets handed to the generator below.
+    let analysis = analysisResult.analysis;
+    let enhancedCount = 0;
 
     if (options.llm) {
       spinner.start('Enhancing documentation with LLM...');
 
       try {
-        const llmService = new LLMService(config.llm);
+        const enhancer = createDocEnhancer(config.llm);
 
-        // Check if Ollama is available
-        const isAvailable = await llmService.checkAvailability();
+        const isAvailable = await enhancer.isReady();
         if (!isAvailable) {
           spinner.warn('Ollama not available, skipping LLM enhancement');
         } else {
-          aiContent = await llmService.enhanceAnalysis(analysisResult.analysis);
-          spinner.succeed(`LLM enhancement complete (${aiContent.size} entries)`);
+          const enhancement = await enhancer.enhanceProject(analysis);
+          analysis = enhancement.analysis;
+          enhancedCount = enhancement.result.enhanced;
+          spinner.succeed(
+            `LLM enhancement complete (${enhancedCount}/${enhancement.result.totalSymbols} symbols)`
+          );
         }
       } catch (error) {
         spinner.warn(`LLM enhancement failed: ${(error as Error).message}`);
@@ -156,7 +161,7 @@ export async function generateCommand(
       spinner.info('Dry run mode - no files will be written');
     }
 
-    const result = await generator.generate(analysisResult.analysis, aiContent);
+    const result = await generator.generate(analysis);
 
     if (result.errors.length > 0) {
       spinner.warn(
@@ -182,8 +187,8 @@ export async function generateCommand(
     console.log(`  ${chalk.gray('Output directory:')} ${config.output.path}`);
     console.log(`  ${chalk.gray('Files generated:')} ${result.filesGenerated}`);
 
-    if (options.llm && aiContent) {
-      console.log(`  ${chalk.gray('LLM-enhanced entries:')} ${aiContent.size}`);
+    if (options.llm && enhancedCount > 0) {
+      console.log(`  ${chalk.gray('LLM-enhanced symbols:')} ${enhancedCount}`);
     }
 
     console.log(chalk.cyan('\nNext steps:'));

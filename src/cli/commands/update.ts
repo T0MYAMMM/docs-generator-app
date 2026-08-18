@@ -9,10 +9,10 @@ import { stat } from 'fs/promises';
 import { Scanner } from '../../core/scanner/index.js';
 import { Analyzer } from '../../core/analyzer/index.js';
 import { Generator } from '../../core/generator/index.js';
-import { LLMService } from '../../llm/llm-service.js';
+import { createDocEnhancer } from '../../llm/doc-enhancer.js';
 import { loadConfig } from '../../core/config/config-loader.js';
 import { logger } from '../../utils/logger.js';
-import { FileNode, AIGeneratedContent } from '../../types/index.js';
+import { FileNode } from '../../types/index.js';
 
 interface UpdateOptions {
   config?: string;
@@ -39,12 +39,14 @@ export async function updateCommand(
 
     // Phase 1: Scan files
     spinner.start('Scanning for changes...');
-    const scanner = new Scanner(
-      path,
-      config.files.include,
-      config.files.exclude,
-      true
-    );
+    const scanner = new Scanner({
+      rootDir: path,
+      patterns: {
+        include: config.files.include,
+        exclude: config.files.exclude,
+      },
+      respectGitignore: true,
+    });
 
     const scanResult = await scanner.scan();
 
@@ -63,27 +65,33 @@ export async function updateCommand(
     // Phase 2: Analyze changed files
     spinner.start('Analyzing changes...');
     const analyzer = new Analyzer();
-    const analysisResult = await analyzer.analyze(changedFiles);
+    const analysisResult = await analyzer.analyze(changedFiles, {
+      name: config.project?.name,
+      path,
+    });
 
     spinner.succeed(
       `Analyzed ${analysisResult.analysis.symbols.length} symbols from changed files`
     );
 
     // Phase 3: LLM Enhancement (optional)
-    let aiContent: Map<string, AIGeneratedContent> | undefined;
+    let analysis = analysisResult.analysis;
 
     if (options.llm) {
       spinner.start('Enhancing documentation with LLM...');
 
       try {
-        const llmService = new LLMService(config.llm);
-        const isAvailable = await llmService.checkAvailability();
+        const enhancer = createDocEnhancer(config.llm);
+        const isAvailable = await enhancer.isReady();
 
         if (!isAvailable) {
           spinner.warn('Ollama not available, skipping LLM enhancement');
         } else {
-          aiContent = await llmService.enhanceAnalysis(analysisResult.analysis);
-          spinner.succeed(`LLM enhancement complete (${aiContent.size} entries)`);
+          const enhancement = await enhancer.enhanceProject(analysis);
+          analysis = enhancement.analysis;
+          spinner.succeed(
+            `LLM enhancement complete (${enhancement.result.enhanced} symbols)`
+          );
         }
       } catch (error) {
         spinner.warn(`LLM enhancement failed: ${(error as Error).message}`);
@@ -94,7 +102,7 @@ export async function updateCommand(
     spinner.start('Updating documentation...');
     const generator = new Generator(config);
 
-    const result = await generator.generate(analysisResult.analysis, aiContent);
+    const result = await generator.generate(analysis);
 
     if (result.errors.length > 0) {
       spinner.warn(
@@ -123,7 +131,7 @@ export async function updateCommand(
  */
 async function detectChangedFiles(
   files: FileNode[],
-  cacheDir: string
+  _cacheDir: string
 ): Promise<FileNode[]> {
   const changedFiles: FileNode[] = [];
 

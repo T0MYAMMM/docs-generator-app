@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import { Scanner } from '../../core/scanner/index.js';
 import { logger } from '../../utils/logger.js';
 import { formatFileSize } from '../../utils/helpers.js';
+import { FileNode } from '../../types/index.js';
 
 /**
  * Command options
@@ -151,7 +152,7 @@ async function displayResults(scanner: Scanner, result: any): Promise<void> {
   }
 
   // Total size
-  const totalSize = result.files.reduce((sum, file) => sum + file.size, 0);
+  const totalSize = result.files.reduce((sum: number, file: FileNode) => sum + file.size, 0);
   console.log(chalk.bold('Total Size:'));
   console.log(`  ${chalk.green(formatFileSize(totalSize))}`);
   console.log('');

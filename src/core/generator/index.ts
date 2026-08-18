@@ -11,7 +11,7 @@ import {
   GeneratedDoc,
   GenerationResult,
   AIGeneratedContent,
-  CodeExample,
+
 } from '../../types/index.js';
 import { logger } from '../../utils/logger.js';
 import { generateFrontmatter, generateOverviewFrontmatter, serializeFrontmatter } from './frontmatter-generator.js';
@@ -121,7 +121,7 @@ export class Generator {
     analysis: ProjectAnalysis,
     aiContent?: Map<string, AIGeneratedContent>
   ): Promise<GeneratedDoc> {
-    const { project, patterns } = analysis;
+    const { project } = analysis;
 
     // Get AI-generated summary if available
     const overviewContent = aiContent?.get('overview');
@@ -139,7 +139,7 @@ export class Generator {
         title: `${project.name} - Airflow Project Overview`,
         description: project.description || summary,
         tags: ['airflow', 'data-pipelines', 'workflow-orchestration', 'auto-generated'],
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().slice(0, 10),
         author: this.config.frontmatter?.author || 'DocGen',
         category: 'overview',
       };
@@ -213,7 +213,7 @@ export class Generator {
       title: `${project.name} - Architecture`,
       description: summary,
       tags: ['architecture', 'overview', 'auto-generated'],
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().slice(0, 10),
       category: 'architecture',
     };
 
@@ -366,7 +366,7 @@ export class Generator {
    * Prepare data for Airflow overview template
    */
   private prepareAirflowOverviewData(analysis: ProjectAnalysis): Record<string, unknown> {
-    const { project, patterns, symbols } = analysis;
+    const { project, patterns } = analysis;
 
     // Extract DAGs from patterns
     const dags = patterns
@@ -403,7 +403,7 @@ export class Generator {
         fileCount: project.fileCount,
         symbolCount: project.symbolCount,
       },
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().slice(0, 10),
       dagCount: dags.length,
       customOperatorCount: customOperators.length,
       customSensorCount: customSensors.length,

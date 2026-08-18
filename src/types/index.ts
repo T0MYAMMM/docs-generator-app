@@ -301,6 +301,12 @@ export interface ProjectMetadata {
   /** TypeScript config (if available) */
   tsConfig?: Record<string, unknown>;
 
+  /** Human-readable project description, when one can be determined */
+  description?: string;
+
+  /** Primary framework detected in the project, when one is detected */
+  framework?: string;
+
   /** Total files analyzed */
   fileCount: number;
 

@@ -6,6 +6,11 @@
 
 import { Symbol, SymbolType, GeneratedDoc } from '../../types/index.js';
 
+/** Today's date as YYYY-MM-DD. */
+function isoDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 /**
  * Options for frontmatter generation
  */
@@ -43,7 +48,7 @@ export function generateFrontmatter(
     title,
     description,
     tags,
-    date: new Date().toISOString().split('T')[0],
+    date: isoDate(),
     author,
     category: getCategoryFromSymbolType(symbol.type),
     ...metadata,
@@ -64,7 +69,7 @@ export function generateOverviewFrontmatter(
     title: `${projectName} - Overview`,
     description: summary || `Overview of the ${projectName} project`,
     tags: [...defaultTags, 'overview', 'architecture'],
-    date: new Date().toISOString().split('T')[0],
+    date: isoDate(),
     author,
     category: 'overview',
     ...metadata,
@@ -90,7 +95,7 @@ function generateTitle(symbol: Symbol): string {
  * Get title prefix based on symbol type
  */
 function getTitlePrefix(type: SymbolType): string {
-  const prefixes: Record<SymbolType, string> = {
+  const prefixes: Partial<Record<SymbolType, string>> = {
     function: 'Function',
     class: 'Class',
     interface: 'Interface',
@@ -141,7 +146,7 @@ function generateTags(symbol: Symbol, defaultTags: string[]): string[] {
  * Get category from symbol type
  */
 function getCategoryFromSymbolType(type: SymbolType): string {
-  const categories: Record<SymbolType, string> = {
+  const categories: Partial<Record<SymbolType, string>> = {
     function: 'api',
     class: 'api',
     interface: 'types',
@@ -160,7 +165,7 @@ function getCategoryFromSymbolType(type: SymbolType): string {
  * Generate default description if none provided
  */
 function generateDefaultDescription(symbol: Symbol): string {
-  const typeDescriptions: Record<SymbolType, string> = {
+  const typeDescriptions: Partial<Record<SymbolType, string>> = {
     function: `A function that performs ${symbol.name} operation`,
     class: `A class representing ${symbol.name}`,
     interface: `An interface defining the structure of ${symbol.name}`,

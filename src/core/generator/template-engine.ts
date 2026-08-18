@@ -136,7 +136,7 @@ export class TemplateEngine {
     });
 
     // Unless helper for negation
-    Handlebars.registerHelper('unless', function(conditional: any, options: any) {
+    Handlebars.registerHelper('unless', function (this: unknown, conditional: any, options: any) {
       if (!conditional) {
         return options.fn(this);
       }
@@ -175,7 +175,7 @@ export class TemplateEngine {
       try {
         const customPath = join(this.customTemplatesPath, `${name}.hbs`);
         const content = await readFile(customPath, 'utf-8');
-        const template = Handlebars.compile(content);
+        const template = Handlebars.compile(content, { noEscape: true });
         this.templates.set(name, template);
         return template;
       } catch {
@@ -187,7 +187,7 @@ export class TemplateEngine {
     // After bundling, templates are at ../templates relative to dist/cli
     const defaultPath = join(__dirname, '../templates', `${name}.hbs`);
     const content = await readFile(defaultPath, 'utf-8');
-    const template = Handlebars.compile(content);
+    const template = Handlebars.compile(content, { noEscape: true });
     this.templates.set(name, template);
     return template;
   }
@@ -204,7 +204,7 @@ export class TemplateEngine {
    * Register a custom template
    */
   registerTemplate(name: string, content: string): void {
-    const template = Handlebars.compile(content);
+    const template = Handlebars.compile(content, { noEscape: true });
     this.templates.set(name, template);
   }
 

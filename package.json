@@ -4,7 +4,7 @@
   "description": "Automatic documentation generator using static analysis and local LLM",
   "main": "dist/index.js",
   "bin": {
-    "docgen": "./dist/cli/index.js"
+    "docgen": "./dist/cli/index.mjs"
   },
   "scripts": {
     "dev": "tsup --watch",

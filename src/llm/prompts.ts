@@ -215,8 +215,16 @@ export function generatePromptForType(type: TypeDefinition): string {
  * Parse LLM response and extract clean description
  */
 export function parseDescription(response: string): string {
+  // Reasoning models (deepseek-r1, qwq, ...) emit a <think> block before their
+  // answer. Drop it — including an unterminated one, which is what a short
+  // token budget produces — so those models degrade to empty rather than
+  // leaking chain-of-thought into the docs.
+  const withoutReasoning = response
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<think>[\s\S]*$/i, '');
+
   // Remove common prefixes
-  let cleaned = response
+  let cleaned = withoutReasoning
     .trim()
     .replace(/^Description:\s*/i, '')
     .replace(/^Summary:\s*/i, '')

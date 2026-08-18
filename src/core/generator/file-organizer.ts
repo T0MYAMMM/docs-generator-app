@@ -201,7 +201,7 @@ export class FileOrganizer {
   /**
    * Get overview document path
    */
-  getOverviewPath(projectName: string): string {
+  getOverviewPath(_projectName: string): string {
     return join(this.outputConfig.path, 'overview.md');
   }
 

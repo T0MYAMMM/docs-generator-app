@@ -9,7 +9,6 @@ import { join } from 'path';
 import enquirer from 'enquirer';
 import chalk from 'chalk';
 import { generateExampleConfig } from '../../core/config/config-loader.js';
-import { logger } from '../../utils/logger.js';
 
 interface InitOptions {
   force?: boolean;

@@ -4,7 +4,7 @@
  * Builds markdown content from code symbols and AI-generated content.
  */
 
-import { Symbol, Parameter, TypeDefinition, CodeExample } from '../../types/index.js';
+import { Symbol, TypeDefinition, CodeExample } from '../../types/index.js';
 
 /**
  * Build markdown documentation for a function
