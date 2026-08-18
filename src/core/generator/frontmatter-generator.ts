@@ -6,6 +6,20 @@
 
 import { Symbol, SymbolType, GeneratedDoc } from '../../types/index.js';
 
+/**
+ * Collapse a comment to one line for YAML frontmatter.
+ *
+ * Docstrings run to several paragraphs; frontmatter needs a single sentence.
+ * Takes the first sentence, or the first line when there is no sentence break.
+ */
+function toSingleLine(text: string): string {
+  const flat = text.replace(/\s+/g, ' ').trim();
+  if (!flat) return '';
+  const firstSentence = flat.match(/^.*?[.!?](?=\s|$)/);
+  const result = firstSentence ? firstSentence[0] : flat;
+  return result.length > 200 ? `${result.slice(0, 197)}...` : result;
+}
+
 /** Today's date as YYYY-MM-DD. */
 function isoDate(): string {
   return new Date().toISOString().slice(0, 10);
@@ -42,7 +56,7 @@ export function generateFrontmatter(
   const tags = generateTags(symbol, defaultTags);
 
   // Generate description
-  const description = summary || generateDefaultDescription(symbol);
+  const description = toSingleLine(summary) || generateDefaultDescription(symbol);
 
   return {
     title,

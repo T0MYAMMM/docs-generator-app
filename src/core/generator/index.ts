@@ -261,9 +261,12 @@ export class Generator {
     const isPython = symbol.filePath.endsWith('.py');
 
     // Generate frontmatter
+    // Fall back to the symbol's own comment — a docstring, JSDoc, or an
+    // LLM-written description — so frontmatter matches the document body
+    // instead of always showing the generic default.
     const frontmatter = generateFrontmatter(
       symbol,
-      aiContent?.summary || '',
+      aiContent?.summary || symbol.comment || '',
       {
         author: this.config.frontmatter?.author,
         defaultTags: this.config.frontmatter?.defaultTags,

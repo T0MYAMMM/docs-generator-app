@@ -76,6 +76,13 @@ short token budget used for summaries.
 Enhancement only touches symbols that lack a docstring or JSDoc comment.
 Anything you have already documented is left exactly as written.
 
+**Review what it writes.** Small models infer behaviour from a signature and
+will state it confidently even when wrong — a 1.5B model described a pure
+`add_numbers(a, b)` as mutating its first argument and returning nothing.
+Static analysis is the trustworthy half of this tool; LLM prose is a draft for
+a human to check, which is why it never overwrites documentation you wrote
+yourself.
+
 ## What it produces
 
 ```
